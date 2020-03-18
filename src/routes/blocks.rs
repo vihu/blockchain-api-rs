@@ -27,7 +27,7 @@ pub fn all(
         (None, Some(b), None) => get_limit_before(conn, 5, b),
         (None, None, Some(a)) => get_limit_after(conn, 5, a),
         (Some(l), None, None) => get_limit(conn, l),
-        _ => not_found()
+        _ => get_limit(conn, 5)
     }
 }
 
@@ -55,9 +55,9 @@ fn get_limit(conn: DbConn, limit: i64) -> JsonValue {
     json!({ "data": results })
 }
 
-fn not_found() -> JsonValue {
-    json!({
-        "status": "error",
-        "reason": "not_found"
-    })
-}
+// fn not_found() -> JsonValue {
+//     json!({
+//         "status": "error",
+//         "reason": "not_found"
+//     })
+// }
