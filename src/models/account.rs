@@ -8,7 +8,7 @@ use chrono::offset::Utc;
 use diesel::sql_types::{Double, Jsonb};
 use serde::{Serialize, Deserialize};
 
-#[derive(Queryable, Debug)]
+#[derive(Queryable, Debug, Serialize, Deserialize)]
 pub struct Account {
     pub block: i64,
     pub timestamp: DateTime<Utc>,

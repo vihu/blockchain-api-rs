@@ -15,6 +15,9 @@ pub fn rocket() -> rocket::Rocket {
         .manage(db::connection::init_db())
         .mount("/api",
             routes![
-            routes::blocks::all
+            routes::blocks::all,
+            routes::blocks::get,
+            routes::accounts::all,
+            routes::accounts::get
             ])
 }
