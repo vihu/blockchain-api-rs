@@ -12,6 +12,9 @@ mod db;
 
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
+        .manage(db::connection::init_db())
         .mount("/api",
-            routes![routes::blocks::all])
+            routes![
+            routes::blocks::all
+            ])
 }
