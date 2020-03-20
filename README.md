@@ -1,6 +1,6 @@
 ### blockchain-api-rs
 
-Rust rest api for helium blockchain backed by warp + sqlx.
+Rust rest api for helium blockchain backed by sqlx + tide.
 
 ### Steps to run:
 
