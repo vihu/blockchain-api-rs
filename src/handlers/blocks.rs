@@ -21,7 +21,7 @@ pub async fn get_block(req: Request<PgPool>) -> Response {
     let height: i64 = req.param("height").unwrap_or(1);
 
     let block = sqlx::query_as!(Block,
-        "SELECT * FROM blocks WHERE height = $1", height)
+        "select * from blocks where height = $1", height)
         .fetch_one(&mut pool)
         .await
         .unwrap();
