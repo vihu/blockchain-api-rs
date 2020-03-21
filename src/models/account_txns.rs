@@ -3,14 +3,14 @@ use sqlx::{Row, FromRow};
 use sqlx::postgres::PgRow;
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct AccountTxn {
+pub struct AccountTxn<'a> {
     pub block: i64,
     pub txn_type: String,
     pub hash: String,
     pub fields: String
 }
 
-impl FromRow<PgRow> for AccountTxn {
+impl<'a> FromRow<'_, PgRow<'a>> for AccountTxn<'a> {
     fn from_row(row: PgRow) -> Self {
         Self {
             block: Row::get(&row, "block"),
@@ -22,6 +22,6 @@ impl FromRow<PgRow> for AccountTxn {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct AccountTxnsResponse {
-    pub data: Vec<AccountTxn>
+pub struct AccountTxnsResponse<'a> {
+    pub data: Vec<AccountTxn<'a>>
 }
