@@ -7,6 +7,7 @@ pub struct AccountTxn<'a> {
     pub block: i64,
     pub txn_type: String,
     pub hash: String,
+    // XXX: fields is actually json
     pub fields: String
 }
 
