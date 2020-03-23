@@ -1,9 +1,10 @@
 use serde::{Serialize, Deserialize};
 use sqlx::{Row, FromRow};
 use sqlx::postgres::PgRow;
+use sqlx::postgres::PgQueryAs;
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct AccountTxn<'a> {
+pub struct AccountTxn {
     pub block: i64,
     pub txn_type: String,
     pub hash: String,
@@ -11,7 +12,7 @@ pub struct AccountTxn<'a> {
     pub fields: String
 }
 
-impl<'a> FromRow<'_, PgRow<'a>> for AccountTxn<'a> {
+impl<'a> FromRow<'_, PgRow<'a>> for AccountTxn {
     fn from_row(row: PgRow) -> Self {
         Self {
             block: Row::get(&row, "block"),
@@ -23,6 +24,6 @@ impl<'a> FromRow<'_, PgRow<'a>> for AccountTxn<'a> {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct AccountTxnsResponse<'a> {
-    pub data: Vec<AccountTxn<'a>>
+pub struct AccountTxnsResponse {
+    pub data: Vec<AccountTxn>
 }
