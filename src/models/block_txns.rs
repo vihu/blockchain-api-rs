@@ -2,6 +2,7 @@ use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
 use sqlx::{Row, error::Error, FromRow};
 use sqlx::postgres::{PgRow, Postgres};
+use serde_json::{Value as JsonValue};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockTxn {
@@ -10,8 +11,7 @@ pub struct BlockTxn {
     pub txn_count: i32,
     pub hash: String,
     pub txn_type: String,
-    // XXX: fields is actually json
-    pub fields: String
+    pub fields: JsonValue
 }
 
 impl<'a> FromRow<'a, PgRow<'a>> for BlockTxn {
