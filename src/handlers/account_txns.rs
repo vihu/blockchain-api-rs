@@ -1,6 +1,7 @@
 use tide::{Request, Response};
 use sqlx::PgPool;
 use crate::models::account_txns::AccountTxnsResponse;
+use sqlx::postgres::PgQueryAs;
 
 pub async fn list_account_txns(req: Request<PgPool>) -> Response {
     let mut pool = req.state();
