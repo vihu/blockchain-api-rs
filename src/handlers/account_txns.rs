@@ -9,9 +9,12 @@ pub async fn list_account_txns(req: Request<PgPool>) -> Response {
     let address: String = req.param("address").unwrap();
 
     let account_txns = sqlx::query_as(
-        "select t.block, t.hash, t.type, t.fields from transactions as t \
-        inner join transaction_actors as a on (t.hash = a.transaction_hash) \
-        where a.actor = $1 order by t.block desc")
+        "select distinct on (t.block, t.hash) t.block, t.hash, a.actor, t.type, t.fields \
+        from transactions as t \
+        inner join transaction_actors as a \
+        on (t.hash = a.transaction_hash) \
+        where a.actor = $1 \
+        order by t.block desc")
         .bind(address.clone())
         .fetch_all(&mut pool)
         .await

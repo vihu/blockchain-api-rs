@@ -2,6 +2,7 @@ use serde::{Serialize, Deserialize};
 use sqlx::{Row, error::Error, FromRow};
 use sqlx::postgres::{PgRow, Postgres};
 use serde_json::{Value as JsonValue};
+use serde_json::json;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct AccountTxn {
@@ -50,7 +51,7 @@ pub fn filtered_account_txns(account_txns: AccountTxns, address: &String) -> Acc
                         None => ()
                     }
                 }
-                let mutilated_account_reward = AccountTxn{fields: x.into(), ..a};
+                let mutilated_account_reward = AccountTxn{fields: json!({"rewards": x}), ..a};
                 filtered.push(mutilated_account_reward);
             },
             None => filtered.push(a)
