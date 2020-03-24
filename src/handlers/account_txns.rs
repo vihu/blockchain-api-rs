@@ -20,6 +20,7 @@ pub async fn list_account_txns(req: Request<PgPool>) -> Response {
         .await
         .unwrap();
 
+    // TODO: We should be doing this in postgres and filter the json itself
     let filtered_account_txns = filtered_account_txns(account_txns.clone(), &address);
 
     Response::new(200)
