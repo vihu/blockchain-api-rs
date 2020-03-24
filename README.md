@@ -17,6 +17,7 @@ cargo run
 ```
 /api/blocks
 /api/blocks/:height
+/api/blocks/:height/txns
 /api/accounts
 /api/accounts/:address
 /api/accounts/:address/txns
