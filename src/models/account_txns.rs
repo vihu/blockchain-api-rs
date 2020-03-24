@@ -1,8 +1,6 @@
 use serde::{Serialize, Deserialize};
-use sqlx::{Row, FromRow};
-use sqlx::postgres::PgRow;
-use sqlx::postgres::Postgres;
-use sqlx::error::Error;
+use sqlx::{Row, error::Error, FromRow};
+use sqlx::postgres::{PgRow, Postgres};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AccountTxn {
