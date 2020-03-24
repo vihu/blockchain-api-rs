@@ -14,6 +14,8 @@ pub struct BlockTxn {
     pub fields: JsonValue
 }
 
+type BlockTxns = Vec<BlockTxn>;
+
 impl<'a> FromRow<'a, PgRow<'a>> for BlockTxn {
     fn from_row(row: PgRow<'a>) -> anyhow::Result<BlockTxn, Error<Postgres>> {
         Ok(Self {
@@ -29,5 +31,5 @@ impl<'a> FromRow<'a, PgRow<'a>> for BlockTxn {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockTxnsResponse {
-    pub data: Vec<BlockTxn>
+    pub data: BlockTxns
 }
