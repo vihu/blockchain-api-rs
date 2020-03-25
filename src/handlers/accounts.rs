@@ -1,34 +1,32 @@
 use tide::Request;
 use sqlx::PgPool;
-use crate::models::accounts::{Account, AccountResponse, AccountsResponse};
+use crate::models::account_ledger::{AccountLedger, AccountLedgerResponse};
 
-pub async fn list_accounts(req: Request<PgPool>) -> AccountsResponse {
+pub async fn get_account(req: Request<PgPool>) -> AccountLedgerResponse {
     let mut pool = req.state();
 
-    let accounts = sqlx::query_as!(Account,
-        "select * from accounts where block = (select max(block) from accounts)")
-        .fetch_all(&mut pool)
-        .await;
-
-    match accounts {
-        Ok(accs) => AccountsResponse { data: Some(accs) },
-        Err(_err) => AccountsResponse { data: None }
-    }
-}
-
-pub async fn get_account(req: Request<PgPool>) -> AccountResponse {
-    let mut pool = req.state();
-
+    // Blow up if you can't handle the address in request
     let address: String = req.param("address").unwrap();
 
-    let account = sqlx::query_as!(Account,
-        "select * from accounts where block = (select max(block) from accounts) and address = $1", address)
+    let account = sqlx::query_as!(AccountLedger,
+        "select address, dc_balance, dc_nonce, security_balance, security_nonce, balance, nonce \
+        from account_ledger \
+        where address = $1", address.clone())
         .fetch_optional(&mut pool)
         .await;
 
     match account {
-        Ok(a) => AccountResponse { data: a },
-        Err(_err) => AccountResponse { data: None }
+        Ok(a) => {
+            match a {
+                // Found an account
+                Some(acc) => AccountLedgerResponse { data: Some(acc) },
+                // No account found, Return a blank account
+                None => AccountLedgerResponse { data: Some(AccountLedger::with_zeros(address)) }
+            }
+        },
+        Err(_err) => {
+            // query errored out, return null
+            AccountLedgerResponse { data: None }
+        }
     }
 }
-
