@@ -1,9 +1,9 @@
-use tide::{Request, Response};
+use tide::Request;
 use sqlx::PgPool;
 use crate::models::block_txns::BlockTxnsResponse;
 use sqlx::postgres::PgQueryAs;
 
-pub async fn list_block_txns(req: Request<PgPool>) -> Response {
+pub async fn list_block_txns(req: Request<PgPool>) -> BlockTxnsResponse {
     let mut pool = req.state();
 
     let height: i64 = req.param("height").unwrap();
@@ -16,11 +16,10 @@ pub async fn list_block_txns(req: Request<PgPool>) -> Response {
         where b.height = $1")
         .bind(height)
         .fetch_all(&mut pool)
-        .await
-        .unwrap();
+        .await;
 
-    Response::new(200)
-        .body_json(&BlockTxnsResponse {data: block_txns})
-        .unwrap()
+    match block_txns {
+        Ok(b) => BlockTxnsResponse { data: Some(b) },
+        Err(_err) => BlockTxnsResponse { data: None}
+    }
 }
-

@@ -1,5 +1,6 @@
 use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
+use tide::{Response, IntoResponse};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Block {
@@ -17,10 +18,22 @@ pub struct Block {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlocksResponse {
-    pub data: Vec<Block>
+    pub data: Option<Vec<Block>>
+}
+
+impl IntoResponse for BlocksResponse {
+    fn into_response(self) -> Response {
+        Response::new(200).body_json(&self).unwrap()
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockResponse {
-    pub data: Block
+    pub data: Option<Block>
+}
+
+impl IntoResponse for BlockResponse {
+    fn into_response(self) -> Response {
+        Response::new(200).body_json(&self).unwrap()
+    }
 }

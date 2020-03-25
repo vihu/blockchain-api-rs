@@ -1,33 +1,33 @@
-use tide::{Request, Response};
+use tide::Request;
 use sqlx::PgPool;
 use crate::models::blocks::{Block, BlocksResponse, BlockResponse};
 
-pub async fn list_blocks(req: Request<PgPool>) -> Response {
+pub async fn list_blocks(req: Request<PgPool>) -> BlocksResponse {
     let mut pool = req.state();
+
     let blocks = sqlx::query_as!(Block,
         "select * from blocks order by height desc limit 2")
         .fetch_all(&mut pool)
-        .await
-        .unwrap();
+        .await;
 
-    Response::new(200)
-        .body_json(&BlocksResponse {data: blocks})
-        .unwrap()
+    match blocks {
+        Ok(bs) => BlocksResponse { data: Some(bs) },
+        Err(_err) => BlocksResponse { data: None }
+    }
 }
 
-pub async fn get_block(req: Request<PgPool>) -> Response {
+pub async fn get_block(req: Request<PgPool>) -> BlockResponse {
     let mut pool = req.state();
 
-    let height: i64 = req.param("height").unwrap_or(1);
+    let height: i64 = req.param("height").unwrap();
 
     let block = sqlx::query_as!(Block,
         "select * from blocks where height = $1", height)
-        .fetch_one(&mut pool)
-        .await
-        .unwrap();
+        .fetch_optional(&mut pool)
+        .await;
 
-    Response::new(200)
-        .body_json(&BlockResponse {data: block})
-        .unwrap()
+    match block {
+        Ok(b) => BlockResponse { data: b },
+        Err(_err) => BlockResponse { data: None}
+    }
 }
-

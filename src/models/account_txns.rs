@@ -1,8 +1,8 @@
 use serde::{Serialize, Deserialize};
 use sqlx::{Row, error::Error, FromRow};
 use sqlx::postgres::{PgRow, Postgres};
-use serde_json::{Value as JsonValue};
-use serde_json::json;
+use serde_json::{json, Value as JsonValue};
+use tide::{Response, IntoResponse};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct AccountTxn {
@@ -27,7 +27,13 @@ impl<'a> FromRow<'a, PgRow<'a>> for AccountTxn {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AccountTxnsResponse {
-    pub data: AccountTxns
+    pub data: Option<AccountTxns>
+}
+
+impl IntoResponse for AccountTxnsResponse {
+    fn into_response(self) -> Response {
+        Response::new(200).body_json(&self).unwrap()
+    }
 }
 
 pub fn filtered_account_txns(account_txns: AccountTxns, address: &String) -> AccountTxns {

@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 use sqlx::{Row, error::Error, FromRow};
 use sqlx::postgres::{PgRow, Postgres};
 use serde_json::{Value as JsonValue};
+use tide::{Response, IntoResponse};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockTxn {
@@ -31,5 +32,11 @@ impl<'a> FromRow<'a, PgRow<'a>> for BlockTxn {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockTxnsResponse {
-    pub data: BlockTxns
+    pub data: Option<BlockTxns>
+}
+
+impl IntoResponse for BlockTxnsResponse {
+    fn into_response(self) -> Response {
+        Response::new(200).body_json(&self).unwrap()
+    }
 }

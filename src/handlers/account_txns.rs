@@ -1,9 +1,9 @@
-use tide::{Request, Response};
+use tide::Request;
 use sqlx::PgPool;
 use crate::models::account_txns::{AccountTxnsResponse, filtered_account_txns};
 use sqlx::postgres::PgQueryAs;
 
-pub async fn list_account_txns(req: Request<PgPool>) -> Response {
+pub async fn list_account_txns(req: Request<PgPool>) -> AccountTxnsResponse {
     let mut pool = req.state();
 
     let address: String = req.param("address").unwrap();
@@ -17,14 +17,15 @@ pub async fn list_account_txns(req: Request<PgPool>) -> Response {
         order by t.block desc")
         .bind(address.clone())
         .fetch_all(&mut pool)
-        .await
-        .unwrap();
+        .await;
 
-    // TODO: We should be doing this in postgres and filter the json itself
-    let filtered_account_txns = filtered_account_txns(account_txns.clone(), &address);
-
-    Response::new(200)
-        .body_json(&AccountTxnsResponse {data: filtered_account_txns})
-        .unwrap()
+    match account_txns {
+        Ok(acc_txns) => {
+            // TODO: We should be doing this in postgres and filter the json itself
+            let filtered_account_txns = filtered_account_txns(acc_txns, &address);
+            AccountTxnsResponse { data: Some(filtered_account_txns) }
+        },
+        Err(_err) => AccountTxnsResponse { data: None }
+    }
 }
 
