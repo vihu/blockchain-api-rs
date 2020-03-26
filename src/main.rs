@@ -10,6 +10,7 @@ async fn main() -> anyhow::Result<()> {
     server.at("/api/blocks").get(handlers::block::list);
     server.at("/api/blocks/:height").get(handlers::block::get);
     server.at("/api/blocks/height").get(handlers::block::height);
+    server.at("/api/blocks/hash/:hash").get(handlers::block::hash);
     server.at("/api/blocks/:height/txns").get(handlers::block_txn::list);
     server.at("/api/accounts/:address").get(handlers::account::get);
     server.at("/api/accounts/:address/txns").get(handlers::account_txn::list);

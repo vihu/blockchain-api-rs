@@ -54,3 +54,22 @@ pub async fn height(req: Request<PgPool>) -> BlockHeightResponse {
         Err(_err) => BlockHeightResponse { data: None }
     }
 }
+
+pub async fn hash(req: Request<PgPool>) -> BlockResponse {
+    let mut pool = req.state();
+
+    let hash: String = req.param("hash").unwrap();
+
+    let block = sqlx::query_as(
+        "select height, time, block_hash, transaction_count \
+        from blocks \
+        where block_hash = $1")
+        .bind(hash)
+        .fetch_optional(&mut pool)
+        .await;
+
+    match block {
+        Ok(b) => BlockResponse { data: b },
+        Err(_err) => BlockResponse { data: None}
+    }
+}
