@@ -36,6 +36,7 @@ impl IntoResponse for AccountTxnsResponse {
     }
 }
 
+// TODO: Remove this function and do this is sql
 pub fn filtered_account_txns(account_txns: AccountTxns, address: &String) -> AccountTxns {
     let mut filtered: AccountTxns = vec![];
     for a in account_txns.clone() {
