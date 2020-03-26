@@ -2,7 +2,7 @@ use tide::Request;
 use sqlx::PgPool;
 use crate::models::account_ledger::{AccountLedger, AccountLedgerResponse};
 
-pub async fn get_account(req: Request<PgPool>) -> AccountLedgerResponse {
+pub async fn get(req: Request<PgPool>) -> AccountLedgerResponse {
     let mut pool = req.state();
 
     // Blow up if you can't handle the address in request

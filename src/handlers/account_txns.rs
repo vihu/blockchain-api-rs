@@ -3,7 +3,7 @@ use sqlx::PgPool;
 use crate::models::account_txns::{AccountTxnsResponse, filtered_account_txns};
 use sqlx::postgres::PgQueryAs;
 
-pub async fn list_account_txns(req: Request<PgPool>) -> AccountTxnsResponse {
+pub async fn list(req: Request<PgPool>) -> AccountTxnsResponse {
     let mut pool = req.state();
 
     let address: String = req.param("address").unwrap();

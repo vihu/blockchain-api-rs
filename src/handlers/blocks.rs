@@ -2,7 +2,7 @@ use tide::Request;
 use sqlx::PgPool;
 use crate::models::blocks::{Block, BlocksResponse, BlockResponse};
 
-pub async fn list_blocks(req: Request<PgPool>) -> BlocksResponse {
+pub async fn list(req: Request<PgPool>) -> BlocksResponse {
     let mut pool = req.state();
 
     let blocks = sqlx::query_as!(Block,
@@ -16,7 +16,7 @@ pub async fn list_blocks(req: Request<PgPool>) -> BlocksResponse {
     }
 }
 
-pub async fn get_block(req: Request<PgPool>) -> BlockResponse {
+pub async fn get(req: Request<PgPool>) -> BlockResponse {
     let mut pool = req.state();
 
     let height: i64 = req.param("height").unwrap();
