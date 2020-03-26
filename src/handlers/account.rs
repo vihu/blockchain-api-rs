@@ -25,7 +25,7 @@ pub async fn get(req: Request<PgPool>) -> AccountLedgerResponse {
             }
         },
         Err(_err) => {
-            // query errored out, return null
+            // TODO: query errored out, this should be a 404 error resp
             AccountLedgerResponse { data: None }
         }
     }

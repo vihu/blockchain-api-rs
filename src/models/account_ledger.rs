@@ -12,17 +12,6 @@ pub struct AccountLedger {
     pub nonce: i64
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct AccountLedgerResponse {
-    pub data: Option<AccountLedger>
-}
-
-impl IntoResponse for AccountLedgerResponse {
-    fn into_response(self) -> Response {
-        Response::new(200).body_json(&self).unwrap()
-    }
-}
-
 impl AccountLedger {
     pub fn with_zeros(address: String) -> Self {
         AccountLedger {
@@ -36,3 +25,15 @@ impl AccountLedger {
         }
     }
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct AccountLedgerResponse {
+    pub data: Option<AccountLedger>
+}
+
+impl IntoResponse for AccountLedgerResponse {
+    fn into_response(self) -> Response {
+        Response::new(200).body_json(&self).unwrap()
+    }
+}
+
