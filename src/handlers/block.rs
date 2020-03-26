@@ -1,6 +1,6 @@
 use tide::Request;
 use sqlx::PgPool;
-use crate::models::blocks::{Block, BlocksResponse, BlockResponse};
+use crate::models::block::{Block, BlocksResponse, BlockResponse};
 
 pub async fn list(req: Request<PgPool>) -> BlocksResponse {
     let mut pool = req.state();

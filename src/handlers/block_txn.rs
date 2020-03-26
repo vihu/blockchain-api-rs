@@ -1,6 +1,6 @@
 use tide::Request;
 use sqlx::PgPool;
-use crate::models::block_txns::BlockTxnsResponse;
+use crate::models::block_txn::BlockTxnsResponse;
 use sqlx::postgres::PgQueryAs;
 
 pub async fn list(req: Request<PgPool>) -> BlockTxnsResponse {
