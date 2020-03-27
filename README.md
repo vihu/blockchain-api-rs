@@ -15,16 +15,16 @@ cargo run
 ### Supported routes (WIP):
 
 ```
-/api/blocks
-/api/blocks/height
-/api/blocks/:height
-/api/blocks/:height/txns
-/api/accounts
-/api/accounts/:address
-/api/accounts/:address/hotspots
-/api/accounts/:address/txns
-/api/hotspots
-/api/hotspots/:address
+/api/v1/blocks
+/api/v1/blocks/height
+/api/v1/blocks/:height
+/api/v1/blocks/:height/txns
+/api/v1/accounts
+/api/v1/accounts/:address
+/api/v1/accounts/:address/hotspots
+/api/v1/accounts/:address/txns
+/api/v1/hotspots
+/api/v1/hotspots/:address
 ```
 
 ### Disclaimer:
