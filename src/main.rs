@@ -7,14 +7,19 @@ async fn main() -> anyhow::Result<()> {
     let pool = db::db_pool().await?;
     let mut server = tide::with_state(pool);
 
+    // block routes
     server.at("/api/blocks").get(handlers::block::list);
     server.at("/api/blocks/:height").get(handlers::block::get);
     server.at("/api/blocks/height").get(handlers::block::height);
     server.at("/api/blocks/hash/:hash").get(handlers::block::hash);
     server.at("/api/blocks/:height/txns").get(handlers::block_txn::list);
+
+    // account routes
     server.at("/api/accounts/:address").get(handlers::account::get);
     server.at("/api/accounts/:address/hotspots").get(handlers::account::hotspots);
     server.at("/api/accounts/:address/txns").get(handlers::account_txn::list);
+
+    // hotspot routes
     server.at("/api/hotspots").get(handlers::hotspot::list);
     server.at("/api/hotspots/:address").get(handlers::hotspot::get);
 
