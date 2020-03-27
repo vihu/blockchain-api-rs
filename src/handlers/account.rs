@@ -38,7 +38,7 @@ pub async fn hotspots(req: Request<PgPool>) -> AccountHotspotResponse {
     // Blow up if you can't handle the address in request
     let address: String = req.param("address").unwrap();
 
-    let account_gateways = sqlx::query_as(
+    let account_hotspots = sqlx::query_as(
         "select g.block, g.address, g.owner, g.location, g.score, \
         l.short_street, l.long_street, l.short_city, l.long_city, \
         l.short_state, l.long_state, l.short_country, l.long_country \
@@ -51,7 +51,7 @@ pub async fn hotspots(req: Request<PgPool>) -> AccountHotspotResponse {
         .fetch_all(&mut pool)
         .await;
 
-    match account_gateways {
+    match account_hotspots {
         Ok(ags) => AccountHotspotResponse { data: Some(ags) },
         Err(_err) => AccountHotspotResponse { data: None}
     }
