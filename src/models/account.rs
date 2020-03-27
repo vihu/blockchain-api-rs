@@ -1,6 +1,7 @@
 use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
 use tide::{Response, IntoResponse};
+use crate::models::hotspot::Hotspots;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Account {
@@ -32,6 +33,17 @@ pub struct AccountResponse {
 }
 
 impl IntoResponse for AccountResponse {
+    fn into_response(self) -> Response {
+        Response::new(200).body_json(&self).unwrap()
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct AccountHotspotResponse {
+    pub data: Option<Hotspots>
+}
+
+impl IntoResponse for AccountHotspotResponse {
     fn into_response(self) -> Response {
         Response::new(200).body_json(&self).unwrap()
     }
