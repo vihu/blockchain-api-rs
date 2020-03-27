@@ -1,6 +1,7 @@
 use tide::Request;
-use sqlx::PgPool;
+use sqlx::{PgPool, postgres::PgQueryAs};
 use crate::models::account_ledger::{AccountLedger, AccountLedgerResponse};
+use crate::models::account_gateway::AccountGatewayResponse;
 
 pub async fn get(req: Request<PgPool>) -> AccountLedgerResponse {
     let mut pool = req.state();
@@ -28,5 +29,30 @@ pub async fn get(req: Request<PgPool>) -> AccountLedgerResponse {
             // TODO: query errored out, this should be a 404 error resp
             AccountLedgerResponse { data: None }
         }
+    }
+}
+
+pub async fn hotspots(req: Request<PgPool>) -> AccountGatewayResponse {
+    let mut pool = req.state();
+
+    // Blow up if you can't handle the address in request
+    let address: String = req.param("address").unwrap();
+
+    let account_gateways = sqlx::query_as(
+        "select g.block, g.address, g.owner, g.location, g.score, \
+        l.short_street, l.long_street, l.short_city, l.long_city, \
+        l.short_state, l.long_state, l.short_country, l.long_country \
+        from gateway_ledger g \
+        left join locations l \
+        on g.location = l.location \
+        where owner = $1 \
+        order by first_block desc, address")
+        .bind(address)
+        .fetch_all(&mut pool)
+        .await;
+
+    match account_gateways {
+        Ok(ags) => AccountGatewayResponse { data: Some(ags) },
+        Err(_err) => AccountGatewayResponse { data: None}
     }
 }
