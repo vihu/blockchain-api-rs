@@ -16,6 +16,7 @@ async fn main() -> anyhow::Result<()> {
     server.at("/api/accounts/:address/hotspots").get(handlers::account::hotspots);
     server.at("/api/accounts/:address/txns").get(handlers::account_txn::list);
     server.at("/api/hotspots").get(handlers::hotspot::list);
+    server.at("/api/hotspots/:address").get(handlers::hotspot::get);
 
     server.listen("127.0.0.1:8000").await?;
 

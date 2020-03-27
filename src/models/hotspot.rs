@@ -56,6 +56,17 @@ impl<'a> FromRow<'a, PgRow<'a>> for Hotspot {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct HotspotResponse {
+    pub data: Option<Hotspot>
+}
+
+impl IntoResponse for HotspotResponse {
+    fn into_response(self) -> Response {
+        Response::new(200).body_json(&self).unwrap()
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct HotspotsResponse {
     pub data: Option<Hotspots>
 }
@@ -65,3 +76,4 @@ impl IntoResponse for HotspotsResponse {
         Response::new(200).body_json(&self).unwrap()
     }
 }
+
