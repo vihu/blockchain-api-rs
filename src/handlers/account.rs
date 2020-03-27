@@ -1,7 +1,7 @@
 use tide::Request;
 use sqlx::{PgPool, postgres::PgQueryAs};
 use crate::models::account_ledger::{AccountLedger, AccountLedgerResponse};
-use crate::models::account_gateway::AccountGatewayResponse;
+use crate::models::account::AccountHotspotResponse;
 
 pub async fn get(req: Request<PgPool>) -> AccountLedgerResponse {
     let mut pool = req.state();
@@ -32,7 +32,7 @@ pub async fn get(req: Request<PgPool>) -> AccountLedgerResponse {
     }
 }
 
-pub async fn hotspots(req: Request<PgPool>) -> AccountGatewayResponse {
+pub async fn hotspots(req: Request<PgPool>) -> AccountHotspotResponse {
     let mut pool = req.state();
 
     // Blow up if you can't handle the address in request
@@ -52,7 +52,7 @@ pub async fn hotspots(req: Request<PgPool>) -> AccountGatewayResponse {
         .await;
 
     match account_gateways {
-        Ok(ags) => AccountGatewayResponse { data: Some(ags) },
-        Err(_err) => AccountGatewayResponse { data: None}
+        Ok(ags) => AccountHotspotResponse { data: Some(ags) },
+        Err(_err) => AccountHotspotResponse { data: None}
     }
 }
